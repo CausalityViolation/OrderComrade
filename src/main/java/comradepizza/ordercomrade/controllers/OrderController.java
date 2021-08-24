@@ -24,17 +24,7 @@ public class OrderController {
     @PostMapping("/order/{orderDetails}")
     public String placeOrder(@PathVariable String orderDetails) throws IOException {
 
-        URL url = new URL("http://localhost:5050/comrade");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
+        StringBuffer content = getMenu();
 
         String availablePizzas = String.valueOf(content);
         String[] splitOrder = orderDetails.split("[#]");
@@ -64,7 +54,7 @@ public class OrderController {
         return repo.getById(idNumerical);
     }
 
-    @GetMapping("/order/")
+    @GetMapping("/order")
     public List<PizzaOrder> getAllOrders() {
         List<PizzaOrder> allPizzaOrders = repo.findAll();
         return allPizzaOrders;
@@ -84,6 +74,11 @@ public class OrderController {
             return "Order Removed";
         }
         return "Not Found";
+    }
+
+    @GetMapping("/order/menu")
+    public StringBuffer showMenu() throws IOException{
+        return getMenu();
     }
     //order/PIZZA$ANTAL$PIZZA$ANTAL#MEDDELANDE
 
